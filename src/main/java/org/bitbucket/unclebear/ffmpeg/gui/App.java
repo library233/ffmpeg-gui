@@ -13,7 +13,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("FFmpeg GUI");
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("app.fxml")), 640, 480));
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("app.fxml"))));
         stage.show();
     }
 }
