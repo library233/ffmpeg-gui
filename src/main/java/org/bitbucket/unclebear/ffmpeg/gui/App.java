@@ -12,8 +12,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        initMainWindow(stage);
+    }
+
+    private void initMainWindow(Stage stage) throws java.io.IOException {
         stage.setTitle("FFmpeg GUI");
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("app.fxml"))));
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("view/MainWindow.fxml"))));
         stage.show();
     }
 }

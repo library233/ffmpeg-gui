@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox>
+        <ToolBar HBox.hgrow="ALWAYS">
+            <Button text="_New task..." textAlignment="JUSTIFY" />
+            <Separator />
+            <Button text="_Start" textAlignment="JUSTIFY" />
+            <Button text="S_top" textAlignment="JUSTIFY" />
+            <Button text="_Clear" textAlignment="JUSTIFY" />
+        </ToolBar>
+        <ToolBar>
+            <Label text="Default output directory:" />
+            <TextField prefWidth="320.0" promptText="Same as each input file" />
+            <Button text="..." textAlignment="JUSTIFY" />
+        </ToolBar>
+    </HBox>
+    <TableView VBox.vgrow="ALWAYS" focusTraversable="false">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+        <columns>
+            <TableColumn text="Number" />
+            <TableColumn prefWidth="240.0" text="Input" />
+            <TableColumn prefWidth="240.0" text="Output" />
+            <TableColumn text="Format" />
+            <TableColumn text="Quality" />
+            <TableColumn prefWidth="240.0" text="Configuration" />
+            <TableColumn text="Status" />
+            <TableColumn text="Action" />
+        </columns>
+        <placeholder>
+            <Label text="" />
+        </placeholder>
+        <VBox.margin>
+            <Insets />
+        </VBox.margin>
+    </TableView>
+</VBox>
