@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/10.0.2-internal">
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints vgrow="ALWAYS" />
+        </rowConstraints>
+        <Label text="Input: " />
+        <TextField prefWidth="320.0" GridPane.columnIndex="1" />
+        <Button text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" />
+        <Label text="Output: " GridPane.rowIndex="1" />
+        <TextField prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Label text="Format: " GridPane.rowIndex="2" />
+        <Label text="Quality: " GridPane.rowIndex="3" />
+        <ChoiceBox prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <ChoiceBox prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    </GridPane>
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS" />
+        </rowConstraints>
+        <Button prefWidth="80.0" text="OK" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+        <Button prefWidth="80.0" text="Cancel" textAlignment="JUSTIFY" GridPane.columnIndex="3" GridPane.halignment="RIGHT" />
+    </GridPane>
+</VBox>
