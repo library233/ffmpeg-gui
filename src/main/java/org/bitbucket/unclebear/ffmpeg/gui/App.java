@@ -17,7 +17,7 @@ public class App extends Application {
 
     private void initMainWindow(Stage stage) throws java.io.IOException {
         stage.setTitle("FFmpeg GUI");
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("view/MainWindow.fxml"))));
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("MainWindow.fxml"))));
         stage.show();
     }
 }
