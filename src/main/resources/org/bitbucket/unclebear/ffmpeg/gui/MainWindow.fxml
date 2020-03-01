@@ -7,7 +7,7 @@
 <VBox fx:id="root" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bitbucket.unclebear.ffmpeg.gui.MainWindow">
     <HBox>
         <ToolBar HBox.hgrow="ALWAYS">
-            <Button defaultButton="true" onAction="#showNewTaskPopup" text="_New task..." textAlignment="JUSTIFY" />
+            <Button onAction="#showNewTaskPopup" text="_New task..." textAlignment="JUSTIFY" />
             <Separator />
             <Button text="_Start" textAlignment="JUSTIFY" />
             <Button text="S_top" textAlignment="JUSTIFY" />
