@@ -11,6 +11,7 @@ public class NewTaskPopup {
     static void show() throws Exception {
         Stage stage = new Stage();
         stage.setScene(new Scene(FXMLLoader.load(NewTaskPopup.class.getResource("NewTaskPopup.fxml"))));
+        stage.setResizable(false);
         stage.setTitle("New Task");
         stage.initOwner(MainWindow.stage);
         stage.initModality(Modality.APPLICATION_MODAL);
