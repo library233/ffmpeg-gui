@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="root" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bitbucket.unclebear.ffmpeg.gui.NewTaskPopup">
     <GridPane hgap="4.0" vgap="8.0">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" />
@@ -41,8 +41,8 @@
         <rowConstraints>
             <RowConstraints vgrow="ALWAYS" />
         </rowConstraints>
-        <Button prefWidth="80.0" text="OK" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-        <Button prefWidth="80.0" text="Cancel" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+        <Button defaultButton="true" prefWidth="80.0" text="_OK" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+        <Button cancelButton="true" onAction="#close" prefWidth="80.0" text="_Cancel" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
       <padding>
          <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
       </padding>

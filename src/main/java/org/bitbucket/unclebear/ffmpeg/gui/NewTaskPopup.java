@@ -1,20 +1,19 @@
 package org.bitbucket.unclebear.ffmpeg.gui;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 
-public class NewTaskPopup {
-    static Stage stage;
+import java.net.URL;
 
-    static void show() throws Exception {
-        Stage stage = new Stage();
-        stage.setScene(new Scene(FXMLLoader.load(NewTaskPopup.class.getResource("NewTaskPopup.fxml"))));
-        stage.setResizable(false);
-        stage.setTitle("New Task");
-        stage.initOwner(MainWindow.stage);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
+public class NewTaskPopup {
+    static final URL FXML = NewTaskPopup.class.getResource("NewTaskPopup.fxml");
+    static final String TITLE = "New Task";
+    @FXML
+    private Node root;
+
+    public void close() {
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
     }
 }

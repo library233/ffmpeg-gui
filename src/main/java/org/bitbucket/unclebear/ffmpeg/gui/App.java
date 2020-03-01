@@ -1,6 +1,8 @@
 package org.bitbucket.unclebear.ffmpeg.gui;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -14,7 +16,8 @@ public class App extends Application {
     }
 
     private void showMainWindow(Stage stage) throws Exception {
-        MainWindow.stage = stage;
-        MainWindow.show();
+        stage.setScene(new Scene(FXMLLoader.load(MainWindow.FXML)));
+        stage.setTitle(MainWindow.TITLE);
+        stage.show();
     }
 }
