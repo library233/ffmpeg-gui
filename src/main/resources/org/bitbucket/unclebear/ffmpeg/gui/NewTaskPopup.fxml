@@ -19,10 +19,10 @@
         </rowConstraints>
         <Label text="Input: " />
         <TextField fx:id="input" prefWidth="320.0" GridPane.columnIndex="1" />
-        <Button text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" />
+        <Button onAction="#chooseInputFile" text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" />
         <Label text="Output: " GridPane.rowIndex="1" />
         <TextField fx:id="output" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Button text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Button onAction="#chooseOutputFile" text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="1" />
         <Label text="Format: " GridPane.rowIndex="2" />
         <ChoiceBox fx:id="format" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="Quality: " GridPane.rowIndex="3" />
