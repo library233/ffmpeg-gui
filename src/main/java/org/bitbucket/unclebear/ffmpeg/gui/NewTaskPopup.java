@@ -50,6 +50,9 @@ public class NewTaskPopup {
     public void chooseInputFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
         String path = file.getCanonicalPath();
         input.setText(path);
         output.setText(getOutputFile(file).getCanonicalPath());
@@ -58,6 +61,9 @@ public class NewTaskPopup {
     public void chooseOutputFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showSaveDialog(root.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
         if (isSameAsInputFile(file)) {
             file = getOutputFile(file);
         }
