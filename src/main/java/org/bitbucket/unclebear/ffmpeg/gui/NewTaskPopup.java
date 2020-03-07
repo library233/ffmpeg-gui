@@ -71,15 +71,20 @@ public class NewTaskPopup {
     }
 
     private File getOutputFile(File inputFile) throws IOException {
-        int i = 0;
         File outputFile = inputFile;
-        while (outputFile.isFile()) {
-            String path = outputFile.getCanonicalPath();
+        outputFile = appendSuffixIfExist(outputFile);
+        return outputFile;
+    }
+
+    private File appendSuffixIfExist(File file) throws IOException {
+        int i = 0;
+        while (file.isFile()) {
+            String path = file.getCanonicalPath();
             String extension = FilenameUtils.getExtension(path);
             String string = FilenameUtils.removeExtension(path);
-            outputFile = new File(string + " (" + ++i + ")." + extension);
+            file = new File(string + " (" + ++i + ")." + extension);
         }
-        return outputFile;
+        return file;
     }
 
     private boolean isSameAsInputFile(File outputFile) throws IOException {
