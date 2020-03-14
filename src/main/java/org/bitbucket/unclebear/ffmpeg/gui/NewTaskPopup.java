@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 public class NewTaskPopup {
     static final URL FXML = NewTaskPopup.class.getResource("NewTaskPopup.fxml");
@@ -80,9 +82,14 @@ public class NewTaskPopup {
         int i = 0;
         while (file.isFile()) {
             String path = file.getCanonicalPath();
-            String extension = FilenameUtils.getExtension(path);
-            String string = FilenameUtils.removeExtension(path);
-            file = new File(string + " (" + ++i + ")." + extension);
+            String directory = file.getParent();
+            String name = Optional.of(FilenameUtils.getBaseName(path))
+                    .filter(StringUtils::isNotBlank)
+                    .orElse("Unnamed");
+            String extension = Optional.of(FilenameUtils.getExtension(path))
+                    .filter(StringUtils::isNotBlank)
+                    .orElse("dat");
+            file = new File(FilenameUtils.normalize(directory + File.separator + name + " (" + ++i + ")." + extension));
         }
         return file;
     }
