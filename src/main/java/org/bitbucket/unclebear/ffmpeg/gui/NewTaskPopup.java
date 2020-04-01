@@ -1,5 +1,7 @@
 package org.bitbucket.unclebear.ffmpeg.gui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
@@ -57,8 +59,19 @@ public class NewTaskPopup {
         }
         String path = file.getCanonicalPath();
         input.setText(path);
-        output.setText(getOutputFile(file).getCanonicalPath());
+        ObservableList<String> formats = FXCollections.observableArrayList("WebM (AV1 Video + Opus Audio)", "MP4 (HEVC Video + AAC Audio)", "Opus Audio", "AAC Audio");
+        format.setItems(formats);
     }
+
+    public void selectFormat() throws IOException {
+        String path = input.getText();
+        File file = new File(path);
+        if (file.isFile()) {
+            output.setText(getOutputFile(file).getCanonicalPath());
+        }
+    }
+
+    public void selectQuality() {}
 
     public void chooseOutputFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
