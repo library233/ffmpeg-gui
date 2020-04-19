@@ -5,16 +5,32 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Task {
-    String input;
-    String output;
-    String format;
-    String quality;
+    private final String input;
+    private final String output;
+    private final String format;
+    private final String quality;
 
     public Task(String input, String output, String format, String quality) {
         this.input = input;
         this.output = output;
         this.format = format;
         this.quality = quality;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public String getQuality() {
+        return quality;
     }
 
     public boolean isValid() {

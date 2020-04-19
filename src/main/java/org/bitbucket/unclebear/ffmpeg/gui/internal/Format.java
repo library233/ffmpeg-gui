@@ -7,41 +7,60 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Format {
-    String name;
-    String extension;
-    Map<Quality, List<String>> qualities;
+    private static final String OPTIMIZED_QUALITY = "Optimized Quality";
+    private static final String BETTER_QUALITY = "Better Quality";
+    private static final String BALANCED = "Balanced";
+    private static final String SMALLER_SIZE = "Smaller Size";
+    private static final String OPTIMIZED_SIZE = "Optimized Size";
+    private String name;
+    private String extension;
+    private Map<String, List<String>> qualities;
 
-    public static class Builder {
-        String name;
-        String extension;
-        Map<Quality, List<String>> qualities = new ConcurrentHashMap<>();
+    private Format() {
+    }
 
-        public Builder withName(String name) {
+    public String getName() {
+        return name;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public Map<String, List<String>> getQualities() {
+        return qualities;
+    }
+
+    static class Builder {
+        private String name;
+        private String extension;
+        private Map<String, List<String>> qualities = new ConcurrentHashMap<>();
+
+        Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withExtension(String extension) {
+        Builder withExtension(String extension) {
             this.extension = extension;
             return this;
         }
 
-        public Builder addQuality(Quality quality, List<String> parameters) {
-            this.qualities.put(quality, parameters);
+        Builder addQuality(String description, boolean video, int videoBitRate, int maxWidth, int maxHeight, boolean audio, int audioBitRate, int sampleRate) {
             return this;
         }
 
-        Format build() throws IllegalAccessException {
+        Format build() {
             if (StringUtils.isAnyBlank(name, extension)) {
-                throw new IllegalAccessException();
+                throw new IllegalStateException();
             }
             if (qualities.isEmpty()) {
-                throw new IllegalAccessException();
+                throw new IllegalStateException();
             }
-            for (Map.Entry<Quality, List<String>> entry : qualities.entrySet()) {
+            for (Map.Entry<String, List<String>> entry : qualities.entrySet()) {
                 List<String> strings = entry.getValue();
                 if (strings.isEmpty()) {
-                    throw new IllegalAccessException();
+                    throw new IllegalStateException();
                 }
             }
             Format format = new Format();
