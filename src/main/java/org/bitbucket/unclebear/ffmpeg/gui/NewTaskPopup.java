@@ -61,6 +61,8 @@ public class NewTaskPopup {
         input.setText(path);
         ObservableList<String> formats = FXCollections.observableArrayList("WebM (AV1 Video + Opus Audio)", "MP4 (HEVC Video + AAC Audio)", "Opus Audio", "AAC Audio");
         format.setItems(formats);
+        ObservableList<String> qualities = FXCollections.observableArrayList("Optimized Quality", "Better Quality", "Balanced", "Smaller Size", "Optimized Size");
+        quality.setItems(qualities);
     }
 
     public void selectFormat() throws IOException {
@@ -71,7 +73,8 @@ public class NewTaskPopup {
         }
     }
 
-    public void selectQuality() {}
+    public void selectQuality() {
+    }
 
     public void chooseOutputFile() throws IOException {
         FileChooser fileChooser = new FileChooser();
