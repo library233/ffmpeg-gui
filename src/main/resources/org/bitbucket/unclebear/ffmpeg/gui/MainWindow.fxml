@@ -28,7 +28,7 @@
             <TableColumn prefWidth="240.0" text="Input" />
             <TableColumn prefWidth="240.0" text="Output" />
             <TableColumn text="Format" />
-            <TableColumn text="Quality" />
+            <TableColumn text="Profile" />
             <TableColumn prefWidth="240.0" text="Configuration" />
             <TableColumn text="Status" />
             <TableColumn text="Action" />

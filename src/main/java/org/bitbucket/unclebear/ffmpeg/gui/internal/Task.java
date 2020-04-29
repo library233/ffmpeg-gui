@@ -8,13 +8,13 @@ public class Task {
     private final String input;
     private final String output;
     private final String format;
-    private final String quality;
+    private final String profile;
 
-    public Task(String input, String output, String format, String quality) {
+    public Task(String input, String output, String format, String profile) {
         this.input = input;
         this.output = output;
         this.format = format;
-        this.quality = quality;
+        this.profile = profile;
     }
 
     public String getInput() {
@@ -29,8 +29,8 @@ public class Task {
         return format;
     }
 
-    public String getQuality() {
-        return quality;
+    public String getProfile() {
+        return profile;
     }
 
     public boolean isValid() {

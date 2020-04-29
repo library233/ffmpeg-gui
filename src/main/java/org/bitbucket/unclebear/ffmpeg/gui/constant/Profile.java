@@ -1,15 +1,15 @@
 package org.bitbucket.unclebear.ffmpeg.gui.constant;
 
-public enum Quality {
-    Q1("Exceptional Quality"),
-    Q2("High Quality"),
-    Q3("Acceptable Quality"),
-    Q4("Small File Size"),
-    Q5("Tiny File Size");
+public enum Profile {
+    P1("Excellent Quality"),
+    P2("Good Quality"),
+    P3("Acceptable Quality"),
+    P4("Small Size"),
+    P5("Tiny Size");
 
     private final String description;
 
-    Quality(String description) {
+    Profile(String description) {
         this.description = description;
     }
 

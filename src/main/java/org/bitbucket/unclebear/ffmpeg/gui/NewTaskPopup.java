@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bitbucket.unclebear.ffmpeg.gui.constant.Format;
-import org.bitbucket.unclebear.ffmpeg.gui.constant.Quality;
+import org.bitbucket.unclebear.ffmpeg.gui.constant.Profile;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,27 +38,32 @@ public class NewTaskPopup implements Initializable {
     @FXML
     private ChoiceBox<String> format;
     @FXML
-    private ChoiceBox<String> quality;
+    private ChoiceBox<String> profile;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> formats = FXCollections.observableArrayList(
-                Format.WEBM.getDescription(),
-                Format.MP4.getDescription(),
-                Format.OPUS.getDescription(),
-                Format.AAC.getDescription()
+                Format.V_WEBM.getDescription(),
+                Format.V_OGG.getDescription(),
+                Format.V_MP4.getDescription(),
+                Format.V_MP4_LEGACY.getDescription(),
+                Format.V_MKV.getDescription(),
+                Format.V_MKV_LEGACY.getDescription(),
+                Format.A_OPUS.getDescription(),
+                Format.A_OGG.getDescription(),
+                Format.A_AAC.getDescription()
         );
         format.setItems(formats);
-        format.setValue(Format.MP4.getDescription());
-        ObservableList<String> qualities = FXCollections.observableArrayList(
-                Quality.Q1.getDescription(),
-                Quality.Q2.getDescription(),
-                Quality.Q3.getDescription(),
-                Quality.Q4.getDescription(),
-                Quality.Q5.getDescription()
+        format.setValue(Format.V_MP4.getDescription());
+        ObservableList<String> profiles = FXCollections.observableArrayList(
+                Profile.P1.getDescription(),
+                Profile.P2.getDescription(),
+                Profile.P3.getDescription(),
+                Profile.P4.getDescription(),
+                Profile.P5.getDescription()
         );
-        quality.setItems(qualities);
-        quality.setValue(Quality.Q3.getDescription());
+        profile.setItems(profiles);
+        profile.setValue(Profile.P3.getDescription());
     }
 
     public void close() {
@@ -67,7 +72,7 @@ public class NewTaskPopup implements Initializable {
     }
 
     public void submit() {
-        Task task = new Task(input.getText(), output.getText(), format.getValue(), quality.getValue());
+        Task task = new Task(input.getText(), output.getText(), format.getValue(), profile.getValue());
         if (task.isValid()) {
             log.info("Valid {}", task);
             close();
@@ -91,7 +96,7 @@ public class NewTaskPopup implements Initializable {
     public void selectFormat() {
     }
 
-    public void selectQuality() {
+    public void selectProfile() {
     }
 
     public void chooseOutputFile() throws IOException {
