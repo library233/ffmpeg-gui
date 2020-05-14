@@ -1,11 +1,11 @@
 package org.bitbucket.unclebear.ffmpeg.gui.constant;
 
 public enum Profile {
-    P1("Excellent Quality"),
-    P2("Good Quality"),
-    P3("Acceptable Quality"),
-    P4("Small Size"),
-    P5("Tiny Size");
+    VERY_HIGH_QUALITY("Very High Quality"),
+    HIGH_QUALITY("High Quality"),
+    BALANCED("Balanced"),
+    SMALL_FILE("Small File"),
+    VERY_SMALL_FILE("Very Small File");
 
     private final String description;
 

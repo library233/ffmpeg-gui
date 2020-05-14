@@ -11,9 +11,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bitbucket.unclebear.ffmpeg.gui.constant.Format;
 import org.bitbucket.unclebear.ffmpeg.gui.constant.Profile;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.Task;
+import org.bitbucket.unclebear.ffmpeg.gui.internal.format.Format;
+import org.bitbucket.unclebear.ffmpeg.gui.internal.format.impl.FormatFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class NewTaskPopup implements Initializable {
     static final URL FXML = NewTaskPopup.class.getResource("NewTaskPopup.fxml");
@@ -42,28 +44,18 @@ public class NewTaskPopup implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<String> formats = FXCollections.observableArrayList(
-                Format.V_WEBM.getDescription(),
-                Format.V_OGG.getDescription(),
-                Format.V_MP4.getDescription(),
-                Format.V_MP4_LEGACY.getDescription(),
-                Format.V_MKV.getDescription(),
-                Format.V_MKV_LEGACY.getDescription(),
-                Format.A_OPUS.getDescription(),
-                Format.A_OGG.getDescription(),
-                Format.A_AAC.getDescription()
-        );
+        ObservableList<String> formats = FXCollections.observableList(FormatFactory.getAll().stream().map(Format::getDescription).collect(Collectors.toList()));
         format.setItems(formats);
-        format.setValue(Format.V_MP4.getDescription());
+        format.setValue(formats.get(0));
         ObservableList<String> profiles = FXCollections.observableArrayList(
-                Profile.P1.getDescription(),
-                Profile.P2.getDescription(),
-                Profile.P3.getDescription(),
-                Profile.P4.getDescription(),
-                Profile.P5.getDescription()
+                Profile.BALANCED.getDescription(),
+                Profile.HIGH_QUALITY.getDescription(),
+                Profile.VERY_HIGH_QUALITY.getDescription(),
+                Profile.SMALL_FILE.getDescription(),
+                Profile.VERY_SMALL_FILE.getDescription()
         );
         profile.setItems(profiles);
-        profile.setValue(Profile.P3.getDescription());
+        profile.setValue(profiles.get(0));
     }
 
     public void close() {
