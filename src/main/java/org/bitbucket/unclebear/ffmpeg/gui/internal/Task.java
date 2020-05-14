@@ -1,10 +1,13 @@
 package org.bitbucket.unclebear.ffmpeg.gui.internal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Task {
+    private static final Logger log = LoggerFactory.getLogger(Task.class);
     private final String input;
     private final String output;
     private final String format;
@@ -39,6 +42,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage(), e);
+            return super.toString();
+        }
     }
 }
