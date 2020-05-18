@@ -5,6 +5,16 @@ import org.bitbucket.unclebear.ffmpeg.gui.internal.format.Format;
 import java.util.List;
 
 public class FormatFactory {
+    public static List<String> parametersPrefix = List.of(
+            "-loglevel", "repeat+level+warning",
+            "-i"
+    );
+    public static List<String> parametersSuffix = List.of(
+            "-hide_banner",
+            "-map_metadata", "-1",
+            "-y"
+    );
+
     private FormatFactory() throws IllegalAccessException {
         throw new IllegalAccessException();
     }
