@@ -10,7 +10,7 @@ class Mp4Video implements Format {
     private static final Map<Profile, List<String>> parameters = Map.of(
             Profile.VERY_HIGH_QUALITY, List.of(
                     "-c:v", "libx265",
-                    "-crf", "24",
+                    "-crf", "28",
                     "-vf", "scale=-2:1080",
                     "-r", "48",
                     "-c:a", "aac",
@@ -20,7 +20,7 @@ class Mp4Video implements Format {
             ),
             Profile.HIGH_QUALITY, List.of(
                     "-c:v", "libx265",
-                    "-crf", "26",
+                    "-crf", "28",
                     "-vf", "scale=-2:720",
                     "-r", "24",
                     "-c:a", "aac",
@@ -30,7 +30,7 @@ class Mp4Video implements Format {
             ),
             Profile.BALANCED, List.of(
                     "-c:v", "libx265",
-                    "-crf", "28",
+                    "-crf", "30",
                     "-vf", "scale=-2:720",
                     "-r", "24",
                     "-c:a", "aac",
@@ -44,8 +44,8 @@ class Mp4Video implements Format {
                     "-vf", "scale=-2:360",
                     "-r", "24",
                     "-c:a", "aac",
-                    "-b:a", "64k",
-                    "-ar", "16000",
+                    "-b:a", "48k",
+                    "-ar", "24000",
                     "-ac", "1"
             ),
             Profile.VERY_SMALL_FILE, List.of(
@@ -55,7 +55,7 @@ class Mp4Video implements Format {
                     "-r", "24",
                     "-c:a", "aac",
                     "-b:a", "32k",
-                    "-ar", "8000",
+                    "-ar", "16000",
                     "-ac", "1"
             )
     );
