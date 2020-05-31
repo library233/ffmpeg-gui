@@ -1,50 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox fx:id="root" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.bitbucket.unclebear.ffmpeg.gui.NewTaskPopup">
+<VBox fx:id="root" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.bitbucket.unclebear.ffmpeg.gui.NewTaskPopup">
     <GridPane hgap="4.0" vgap="8.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints vgrow="ALWAYS" />
-            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
-        <Label text="Input: " />
-        <TextField fx:id="input" prefWidth="320.0" GridPane.columnIndex="1" />
-        <Button onAction="#chooseInputFile" text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" />
-        <Label text="Format: " GridPane.rowIndex="1" />
-        <ChoiceBox fx:id="format" onAction="#selectFormat" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label text="Output: " GridPane.rowIndex="2" />
-        <TextField fx:id="output" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Button onAction="#chooseOutputFile" text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Label text="Profile: " GridPane.rowIndex="3" />
-        <ChoiceBox fx:id="profile" onAction="#selectProfile" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <padding>
-         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-      </padding>
+        <Label text="Input: "/>
+        <TextField fx:id="input" prefWidth="320.0" GridPane.columnIndex="1"/>
+        <Button onAction="#chooseInputFile" text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2"/>
+        <Label text="Format: " GridPane.rowIndex="1"/>
+        <ChoiceBox fx:id="format" onAction="#selectFormat" prefWidth="320.0" GridPane.columnIndex="1"
+                   GridPane.rowIndex="1"/>
+        <Label text="Output: " GridPane.rowIndex="2"/>
+        <TextField fx:id="output" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Button onAction="#chooseOutputFile" text="..." textAlignment="JUSTIFY" GridPane.columnIndex="2"
+                GridPane.rowIndex="2"/>
+        <Label text="Profile: " GridPane.rowIndex="3"/>
+        <ChoiceBox fx:id="profile" onAction="#selectProfile" prefWidth="320.0" GridPane.columnIndex="1"
+                   GridPane.rowIndex="3"/>
+        <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+        </padding>
     </GridPane>
     <GridPane>
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
-        <Button onAction="#submit" prefWidth="80.0" text="_OK" textAlignment="JUSTIFY" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-        <Button cancelButton="true" onAction="#close" prefWidth="80.0" text="_Cancel" textAlignment="JUSTIFY" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-      <padding>
-         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-      </padding>
+        <Button onAction="#submit" prefWidth="80.0" text="_OK" textAlignment="JUSTIFY" GridPane.columnIndex="1"
+                GridPane.halignment="CENTER"/>
+        <Button cancelButton="true" onAction="#close" prefWidth="80.0" text="_Cancel" textAlignment="JUSTIFY"
+                GridPane.columnIndex="2" GridPane.halignment="CENTER"/>
+        <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+        </padding>
     </GridPane>
 </VBox>

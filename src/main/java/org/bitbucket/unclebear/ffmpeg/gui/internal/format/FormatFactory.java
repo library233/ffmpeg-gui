@@ -1,7 +1,6 @@
 package org.bitbucket.unclebear.ffmpeg.gui.internal.format;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bitbucket.unclebear.ffmpeg.gui.constant.Profile;
 
 import java.util.ArrayList;
 import java.util.List;

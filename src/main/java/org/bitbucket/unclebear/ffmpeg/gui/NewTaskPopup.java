@@ -11,10 +11,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bitbucket.unclebear.ffmpeg.gui.constant.Profile;
+import org.bitbucket.unclebear.ffmpeg.gui.intermediate.Channel;
+import org.bitbucket.unclebear.ffmpeg.gui.intermediate.Event;
+import org.bitbucket.unclebear.ffmpeg.gui.intermediate.EventBus;
+import org.bitbucket.unclebear.ffmpeg.gui.internal.FFmpeg;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.Task;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.format.Format;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.format.FormatFactory;
+import org.bitbucket.unclebear.ffmpeg.gui.internal.format.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,12 +63,12 @@ public class NewTaskPopup implements Initializable {
 
     public void submit() {
         Task task = new Task(input.getText(), output.getText(), format.getValue(), profile.getValue());
-        if (task.isValid()) {
-            log.info("Valid {}", task);
-            close();
-        } else {
-            log.info("Invalid {}", task);
+        if (!task.isValid()) {
+            log.warn("Invalid {}", task);
+            return;
         }
+        EventBus.emit(new Channel(FFmpeg.class.getCanonicalName()), new Event(task.toString()));
+        close();
     }
 
     public void chooseInputFile() throws IOException {

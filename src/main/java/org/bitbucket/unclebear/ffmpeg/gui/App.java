@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.bitbucket.unclebear.ffmpeg.gui.intermediate.EventBus;
+import org.bitbucket.unclebear.ffmpeg.gui.internal.FFmpeg;
 
 public class App extends Application {
     public static void main(String[] args) {
@@ -13,7 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        EventBus.getInstance().start();
+        FFmpeg.init();
         showMainWindow(stage);
     }
 
