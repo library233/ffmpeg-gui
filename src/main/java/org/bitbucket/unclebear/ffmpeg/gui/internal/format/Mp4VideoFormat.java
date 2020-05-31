@@ -1,14 +1,13 @@
-package org.bitbucket.unclebear.ffmpeg.gui.internal.format.impl;
+package org.bitbucket.unclebear.ffmpeg.gui.internal.format;
 
 import org.bitbucket.unclebear.ffmpeg.gui.constant.Profile;
-import org.bitbucket.unclebear.ffmpeg.gui.internal.format.Format;
 
 import java.util.List;
 import java.util.Map;
 
-class Mp4Video implements Format {
+class Mp4VideoFormat implements Format {
     private static final Map<Profile, List<String>> parameters = Map.of(
-            Profile.VERY_HIGH_QUALITY, List.of(
+            Profile.VERY_HIGH_VIDEO_QUALITY, List.of(
                     "-c:v", "libx265",
                     "-crf", "28",
                     "-vf", "scale=-2:1080",
@@ -18,7 +17,7 @@ class Mp4Video implements Format {
                     "-ar", "48000",
                     "-ac", "2"
             ),
-            Profile.HIGH_QUALITY, List.of(
+            Profile.HIGH_VIDEO_QUALITY, List.of(
                     "-c:v", "libx265",
                     "-crf", "28",
                     "-vf", "scale=-2:720",
@@ -28,31 +27,31 @@ class Mp4Video implements Format {
                     "-ar", "32000",
                     "-ac", "2"
             ),
-            Profile.BALANCED, List.of(
+            Profile.BALANCED_VIDEO_QUALITY_AND_FILE_SIZE, List.of(
                     "-c:v", "libx265",
                     "-crf", "30",
-                    "-vf", "scale=-2:720",
+                    "-vf", "scale=-2:576",
                     "-r", "24",
                     "-c:a", "aac",
                     "-b:a", "96k",
                     "-ar", "24000",
                     "-ac", "2"
             ),
-            Profile.SMALL_FILE, List.of(
+            Profile.SMALL_FILE_SIZE, List.of(
                     "-c:v", "libx265",
                     "-crf", "30",
-                    "-vf", "scale=-2:360",
-                    "-r", "24",
+                    "-vf", "scale=-2:480",
+                    "-r", "20",
                     "-c:a", "aac",
                     "-b:a", "48k",
                     "-ar", "24000",
                     "-ac", "1"
             ),
-            Profile.VERY_SMALL_FILE, List.of(
+            Profile.VERY_SMALL_FILE_SIZE, List.of(
                     "-c:v", "libx265",
                     "-crf", "32",
                     "-vf", "scale=-2:360",
-                    "-r", "24",
+                    "-r", "20",
                     "-c:a", "aac",
                     "-b:a", "32k",
                     "-ar", "16000",

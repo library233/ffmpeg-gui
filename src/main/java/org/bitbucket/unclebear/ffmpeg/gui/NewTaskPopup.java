@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bitbucket.unclebear.ffmpeg.gui.constant.Profile;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.Task;
 import org.bitbucket.unclebear.ffmpeg.gui.internal.format.Format;
-import org.bitbucket.unclebear.ffmpeg.gui.internal.format.impl.FormatFactory;
+import org.bitbucket.unclebear.ffmpeg.gui.internal.format.FormatFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +47,7 @@ public class NewTaskPopup implements Initializable {
         ObservableList<String> formats = FXCollections.observableList(FormatFactory.getAll().stream().map(Format::getDescription).collect(Collectors.toList()));
         format.setItems(formats);
         format.setValue(formats.get(0));
-        ObservableList<String> profiles = FXCollections.observableArrayList(
-                Profile.BALANCED.getDescription(),
-                Profile.HIGH_QUALITY.getDescription(),
-                Profile.VERY_HIGH_QUALITY.getDescription(),
-                Profile.SMALL_FILE.getDescription(),
-                Profile.VERY_SMALL_FILE.getDescription()
-        );
+        ObservableList<String> profiles = FXCollections.observableList(Profile.getAll().stream().map(Profile::getDescription).collect(Collectors.toList()));
         profile.setItems(profiles);
         profile.setValue(profiles.get(0));
     }
