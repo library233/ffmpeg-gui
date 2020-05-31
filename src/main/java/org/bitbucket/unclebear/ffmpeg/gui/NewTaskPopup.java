@@ -64,7 +64,7 @@ public class NewTaskPopup implements Initializable {
     public void submit() {
         Task task = new Task(input.getText(), output.getText(), format.getValue(), profile.getValue());
         if (!task.isValid()) {
-            log.warn("Invalid {}", task);
+            log.warn("Invalid task: " + task);
             return;
         }
         EventBus.emit(new Channel(FFmpeg.class.getCanonicalName()), new Event(task.toString()));
@@ -117,7 +117,7 @@ public class NewTaskPopup implements Initializable {
             String extension = Optional.of(FilenameUtils.getExtension(path))
                     .filter(StringUtils::isNotBlank)
                     .orElse("dat");
-            file = new File(FilenameUtils.normalize(directory + File.separator + name + " (" + ++i + ")." + extension));
+            file = new File(FilenameUtils.normalize(String.format("%s%s%s (%d).%s", directory, File.separator, name, ++i, extension)));
         }
         return file;
     }

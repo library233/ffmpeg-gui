@@ -40,14 +40,14 @@ public class FormatFactory {
         Format format = ALL.stream().parallel()
                 .filter(it -> StringUtils.equals(formatDescription, it.getDescription()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(formatDescription));
+                .orElseThrow(() -> new IllegalArgumentException("Format not found: " + formatDescription));
         Profile profile = Profile.getAll().stream().parallel()
                 .filter(it -> StringUtils.equals(profileDescription, it.getDescription()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(profileDescription));
+                .orElseThrow(() -> new IllegalArgumentException("Profile not found: " + profileDescription));
         List<String> parameters = format.getParameters(profile);
         if (parameters == null || parameters.isEmpty()) {
-            throw new IllegalArgumentException(String.format("%s (%s)", format, profile.getDescription()));
+            throw new IllegalArgumentException(String.format("Invalid parameters for %s (%s)", format, profile.getDescription()));
         }
         List<String> result = new ArrayList<>();
         result.addAll(PARAMETER_PREFIX);

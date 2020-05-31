@@ -1,17 +1,23 @@
 package org.bitbucket.unclebear.ffmpeg.gui.internal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Task {
     private static final Logger log = LoggerFactory.getLogger(Task.class);
-    private final String input;
-    private final String output;
-    private final String format;
-    private final String profile;
+    private String input;
+    private String output;
+    private String format;
+    private String profile;
+
+    public Task() {
+    }
 
     public Task(String input, String output, String format, String profile) {
         this.input = input;
@@ -37,7 +43,33 @@ public class Task {
     }
 
     public boolean isValid() {
-        return StringUtils.isNotBlank(input);
+        File inputFile = new File(input);
+        if (!inputFile.isFile()) {
+            log.warn("Input is not a normal file: " + input);
+            return false;
+        }
+        if (!inputFile.canRead()) {
+            log.warn("Cannot read input file: " + input);
+            return false;
+        }
+        File outputFile = new File(output);
+        if (outputFile.exists()) {
+            if (!outputFile.isFile()) {
+                log.warn("Output already exists and is not a normal file: " + input);
+                return false;
+            }
+            if (!outputFile.canWrite()) {
+                log.warn("Cannot overwrite already existing output file: " + output);
+                return false;
+            }
+        } else {
+            File parent = outputFile.getParentFile();
+            if (!parent.canWrite()) {
+                log.warn("Cannot write: " + parent.getPath());
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
