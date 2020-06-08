@@ -38,7 +38,7 @@ class Mp4VideoFormat implements Format {
             Profile.SMALL_FILE_SIZE, List.of(
                     "-c:v", "libx265",
                     "-crf", "30",
-                    "-vf", "scale=-2:480",
+                    "-vf", "scale=-2:360",
                     "-r", "20",
                     "-c:a", "aac",
                     "-b:a", "48k",
