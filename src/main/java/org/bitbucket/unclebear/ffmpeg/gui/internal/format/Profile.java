@@ -3,16 +3,16 @@ package org.bitbucket.unclebear.ffmpeg.gui.internal.format;
 import java.util.List;
 
 public enum Profile {
-    VERY_HIGH_VIDEO_QUALITY("Very High Video Quality"),
-    HIGH_VIDEO_QUALITY("High Video Quality"),
-    BALANCED_VIDEO_QUALITY_AND_FILE_SIZE("Balanced Video Quality and File Size"),
-    SMALL_FILE_SIZE("Small File Size"),
-    VERY_SMALL_FILE_SIZE("Very Small File Size");
+    VERY_HIGH_QUALITY("Very high quality"),
+    HIGH_QUALITY("High quality"),
+    BALANCED("Balanced"),
+    SMALL_FILE_SIZE("Small file size"),
+    VERY_SMALL_FILE_SIZE("Very small file size");
 
     private static final List<Profile> ALL = List.of(
-            BALANCED_VIDEO_QUALITY_AND_FILE_SIZE,
-            HIGH_VIDEO_QUALITY,
-            VERY_HIGH_VIDEO_QUALITY,
+            BALANCED,
+            HIGH_QUALITY,
+            VERY_HIGH_QUALITY,
             SMALL_FILE_SIZE,
             VERY_SMALL_FILE_SIZE
     );

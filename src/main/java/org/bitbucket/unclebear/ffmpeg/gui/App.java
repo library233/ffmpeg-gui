@@ -21,5 +21,7 @@ public class App extends Application {
         stage.setScene(new Scene(FXMLLoader.load(MainWindow.FXML)));
         stage.setTitle(MainWindow.TITLE);
         stage.show();
+        stage.setMinWidth(stage.getWidth());
+        stage.setMinHeight(stage.getHeight());
     }
 }

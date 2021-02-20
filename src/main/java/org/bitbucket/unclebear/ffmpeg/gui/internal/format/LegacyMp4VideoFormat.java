@@ -5,9 +5,9 @@ import java.util.Map;
 
 class LegacyMp4VideoFormat implements Format {
     private static final Map<Profile, List<String>> parameters = Map.of(
-            Profile.VERY_HIGH_VIDEO_QUALITY, List.of(),
-            Profile.HIGH_VIDEO_QUALITY, List.of(),
-            Profile.BALANCED_VIDEO_QUALITY_AND_FILE_SIZE, List.of(),
+            Profile.VERY_HIGH_QUALITY, List.of(),
+            Profile.HIGH_QUALITY, List.of(),
+            Profile.BALANCED, List.of(),
             Profile.SMALL_FILE_SIZE, List.of(),
             Profile.VERY_SMALL_FILE_SIZE, List.of()
     );

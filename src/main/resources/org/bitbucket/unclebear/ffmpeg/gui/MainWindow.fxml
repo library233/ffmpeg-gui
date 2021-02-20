@@ -14,23 +14,23 @@
             <Button text="_Clear" textAlignment="JUSTIFY"/>
         </ToolBar>
         <ToolBar>
-            <Label text="Default output directory: "/>
-            <TextField prefWidth="320.0" promptText="Same as each input file"/>
+            <Label text="Output directory: "/>
+            <TextField prefWidth="320" promptText="Same as input by default"/>
             <Button text="..." textAlignment="JUSTIFY"/>
         </ToolBar>
     </HBox>
-    <TableView focusTraversable="false" VBox.vgrow="ALWAYS">
+    <TableView focusTraversable="false" VBox.vgrow="ALWAYS" minHeight="720.0">
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
         <columns>
-            <TableColumn text="Number"/>
-            <TableColumn prefWidth="240.0" text="Input"/>
-            <TableColumn prefWidth="240.0" text="Output"/>
-            <TableColumn text="Format"/>
-            <TableColumn text="Profile"/>
-            <TableColumn text="Status"/>
-            <TableColumn text="Action"/>
+            <TableColumn minWidth="40.0" text="No."/>
+            <TableColumn minWidth="320.0" text="Input file"/>
+            <TableColumn minWidth="320.0" text="Output file"/>
+            <TableColumn minWidth="160.0" text="Output format"/>
+            <TableColumn minWidth="160.0" text="Encoding profile"/>
+            <TableColumn minWidth="120.0" text="Status"/>
+            <TableColumn minWidth="120.0" text="Actions"/>
         </columns>
         <placeholder>
             <Label/>

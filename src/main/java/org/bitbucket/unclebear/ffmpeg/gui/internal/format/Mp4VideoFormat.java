@@ -5,7 +5,7 @@ import java.util.Map;
 
 class Mp4VideoFormat implements Format {
     private static final Map<Profile, List<String>> parameters = Map.of(
-            Profile.VERY_HIGH_VIDEO_QUALITY, List.of(
+            Profile.VERY_HIGH_QUALITY, List.of(
                     "-c:v", "libx265",
                     "-crf", "28",
                     "-vf", "scale=-2:1080",
@@ -15,7 +15,7 @@ class Mp4VideoFormat implements Format {
                     "-ar", "48000",
                     "-ac", "2"
             ),
-            Profile.HIGH_VIDEO_QUALITY, List.of(
+            Profile.HIGH_QUALITY, List.of(
                     "-c:v", "libx265",
                     "-crf", "28",
                     "-vf", "scale=-2:720",
@@ -25,7 +25,7 @@ class Mp4VideoFormat implements Format {
                     "-ar", "32000",
                     "-ac", "2"
             ),
-            Profile.BALANCED_VIDEO_QUALITY_AND_FILE_SIZE, List.of(
+            Profile.BALANCED, List.of(
                     "-c:v", "libx265",
                     "-crf", "30",
                     "-vf", "scale=-2:576",
