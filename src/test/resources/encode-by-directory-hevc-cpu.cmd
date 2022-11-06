@@ -11,7 +11,7 @@ for %%f in (*.mp4) do (
     -hide_banner                        ^
     -map_metadata -1                    ^
     -c:v libx265                        ^
-    -c:a aac                            ^
+    -c:a copy                           ^
     -n "output\%%f"
 )
 echo.
