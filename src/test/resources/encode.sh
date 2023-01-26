@@ -73,35 +73,19 @@ get_output_extension() {
 }
 
 is_video () {
-    if is_type video "${1}" && is_non_static "${1}"
-    then
-        return 0
-    fi
-    return 1
+    is_type video "${1}" && is_non_static "${1}"
 }
 
 is_audio() {
-    if is_type audio "${1}"
-    then
-        return 0
-    fi
-    return 1
+    is_type audio "${1}"
 }
 
 is_type() {
-    if [[ "${1}" == $(ffprobe -loglevel error -select_streams "${1:0:1}" -show_entries stream=codec_type -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') ]]
-    then
-        return 0
-    fi
-    return 1
+    [[ "${1}" == $(ffprobe -loglevel error -select_streams "${1:0:1}" -show_entries stream=codec_type -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') ]]
 }
 
 is_non_static() {
-    if [[ $(ffprobe -loglevel error -select_streams v -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') -gt 1 ]]
-    then
-        return 0
-    fi
-    return 1
+    [[ $(ffprobe -loglevel error -select_streams v -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') -gt 1 ]]
 }
 
 encode() {
