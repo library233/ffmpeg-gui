@@ -35,10 +35,8 @@ encode_directory() {
         local file=${file#./}
         mkdir -p "${output_directory}/$(dirname "${file}")" || continue
         local extension=$(get_output_extension "${file}")
-        if [[ ${extension} != "" ]]
+        if [[ ${extension} == "" ]] || ! encode "${file}" "${output_directory}/${file%.*}.${extension}"
         then
-            encode "${file}" "${output_directory}/${file%.*}.${extension}"
-        else
             copy "${file}" "${output_directory}/${file}"
         fi
     done
@@ -50,11 +48,8 @@ encode_file() {
     local file=$(basename "${1}")
     local file=${file#./}
     local extension=$(get_output_extension "${file}")
-    if [[ ${extension} != "" ]]
+    if [[ ${extension} == "" ]] || ! encode "${file}" "${file%.*}-${2}.${extension}"
     then
-        local output="${file%.*}-${2}.${extension}"
-        encode "${file}" "${output}"
-    else
         skip "${file}"
     fi
     cd - >/dev/null
@@ -90,12 +85,12 @@ is_non_static() {
 
 encode() {
     printf '%s -- encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -n "${2}"
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -y "${2}" >/dev/null 2>&1
 }
 
 copy() {
     printf '%s -- copying "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    cp "${1}" "${2}"
+    cp -f "${1}" "${2}"
 }
 
 skip() {
