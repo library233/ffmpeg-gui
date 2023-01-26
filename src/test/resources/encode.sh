@@ -73,7 +73,7 @@ get_output_extension() {
 }
 
 is_video () {
-    if is_type video "${1}"
+    if is_type video "${1}" && is_non_static "${1}"
     then
         return 0
     fi
@@ -96,9 +96,17 @@ is_type() {
     return 1
 }
 
+is_non_static() {
+    if [[ $(ffprobe -loglevel error -select_streams v -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') -gt 1 ]]
+    then
+        return 0
+    fi
+    return 1
+}
+
 encode() {
     printf '%s -- encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -n "${2}" >/dev/null 2>&1
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -n "${2}"
 }
 
 copy() {
