@@ -35,8 +35,13 @@ encode_directory() {
         local file=${file#./}
         mkdir -p "${output_directory}/$(dirname "${file}")" || continue
         local extension=$(get_output_extension "${file}")
-        if [[ ${extension} == "" ]] || ! encode "${file}" "${output_directory}/${file%.*}.${extension}"
+        local output="${output_directory}/${file%.*}.${extension}"
+        if [[ ${extension} == "" ]]
         then
+            copy "${file}" "${output_directory}/${file}"
+        elif ! encode "${file}" "${output}"
+        then
+            remove "${output}"
             copy "${file}" "${output_directory}/${file}"
         fi
     done
@@ -48,8 +53,13 @@ encode_file() {
     local file=$(basename "${1}")
     local file=${file#./}
     local extension=$(get_output_extension "${file}")
-    if [[ ${extension} == "" ]] || ! encode "${file}" "${file%.*}-${2}.${extension}"
+    local output="${file%.*}-${2}.${extension}"
+    if [[ ${extension} == "" ]]
     then
+        skip "${file}"
+    elif ! encode "${file}" "${output}"
+    then
+        remove "${output}"
         skip "${file}"
     fi
     cd - >/dev/null
@@ -86,6 +96,11 @@ is_non_static() {
 encode() {
     printf '%s -- encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
     ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -y "${2}" >/dev/null 2>&1
+}
+
+remove() {
+    printf '%s -- removing "%s"\n' "$(now)" "${1}"
+    rm -f "${1}"
 }
 
 copy() {
