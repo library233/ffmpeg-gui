@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 main() {
     which ffmpeg ffprobe >/dev/null || exit 1
@@ -21,7 +21,8 @@ encode_item() {
         encode_directory "${1}" "${suffix}"
     elif [[ -f "${1}" ]]
     then
-        encode_file "${1}" "${suffix}"
+        encode_file "${1}" "${suffix}" &
+        wait_for_next
     else
         return 1
     fi
@@ -30,11 +31,12 @@ encode_item() {
 encode_directory() {
     cd "${1}" || return 1
     local output_directory="../$(basename "${1}")-${2}"
-    find . -type f -print0 | while read -d $'\0' file
+    while read -d $'\0' file
     do
         encode_file_to_directory "${file#./}" "${output_directory}" &
         wait_for_next
-    done
+    done < <(find . -type f -print0)
+    wait
     cd - >/dev/null
 }
 
@@ -53,6 +55,10 @@ encode_file_to_directory() {
         remove "${output}"
         copy "${1}" "${2}/${1}"
     fi
+}
+
+wait_for_next() {
+    [[ $(jobs -p | wc -l) -ge $(nproc) ]] && wait -n
 }
 
 encode_file() {
@@ -105,7 +111,7 @@ is_non_static() {
 
 encode() {
     printf '%s -- encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -y "${2}" >/dev/null 2>&1
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -y "${2}" </dev/null >/dev/null 2>&1
 }
 
 remove() {
@@ -115,7 +121,7 @@ remove() {
 
 copy() {
     printf '%s -- copying "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    cp -f "${1}" "${2}"
+    cp -np "${1}" "${2}"
 }
 
 skip() {
@@ -124,13 +130,6 @@ skip() {
 
 now() {
     date "+%Y-%m-%d %H:%M:%S"
-}
-
-wait_for_next() {
-    while true
-    do
-        [[ $(jobs -p | wc -l) -gt $(nproc) ]] && sleep 1s || break
-    done
 }
 
 main "${@}"
