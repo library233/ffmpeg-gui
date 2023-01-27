@@ -15,7 +15,7 @@ encode_item() {
         file "${1}"
         return 1
     fi
-    local suffix=encoded-$(date +%Y%m%d%H%M%S)
+    local suffix=encoded
     if [[ -d "${1}" ]]
     then
         encode_directory "${1}" "${suffix}"
@@ -33,7 +33,7 @@ encode_directory() {
     find . -type f -print0 | while read -d $'\0' file
     do
         encode_file_to_directory "${file#./}" "${output_directory}" &
-        [[ $(jobs -p | wc -l) -ge $(nproc) ]] && wait -n
+        wait_for_next
     done
     cd - >/dev/null
 }
@@ -45,6 +45,9 @@ encode_file_to_directory() {
     if [[ ${extension} == "" ]]
     then
         copy "${1}" "${2}/${1}"
+    elif [[ -e "${output}" ]]
+    then
+        skip "${1}"
     elif ! encode "${1}" "${output}"
     then
         remove "${output}"
@@ -59,6 +62,9 @@ encode_file() {
     local extension=$(get_output_extension "${file}")
     local output="${file%.*}-${2}.${extension}"
     if [[ ${extension} == "" ]]
+    then
+        skip "${file}"
+    elif [[ -e "${output}" ]]
     then
         skip "${file}"
     elif ! encode "${file}" "${output}"
@@ -118,6 +124,13 @@ skip() {
 
 now() {
     date "+%Y-%m-%d %H:%M:%S"
+}
+
+wait_for_next() {
+    while true
+    do
+        [[ $(jobs -p | wc -l) -gt $(nproc) ]] && sleep 1s || break
+    done
 }
 
 main "${@}"
