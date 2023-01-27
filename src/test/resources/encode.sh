@@ -2,14 +2,14 @@
 
 main() {
     which ffmpeg ffprobe >/dev/null || exit 1
-    for arg in "${@}"
+    for item in "${@}"
     do
-        encode_all "${arg}"
+        encode_item "${item}"
     done
     exit 0
 }
 
-encode_all() {
+encode_item() {
     if [[ ! -r "${1}" ]]
     then
         file "${1}"
@@ -32,20 +32,24 @@ encode_directory() {
     local output_directory="../$(basename "${1}")-${2}"
     find . -type f -print0 | while read -d $'\0' file
     do
-        local file=${file#./}
-        mkdir -p "${output_directory}/$(dirname "${file}")" || continue
-        local extension=$(get_output_extension "${file}")
-        local output="${output_directory}/${file%.*}.${extension}"
-        if [[ ${extension} == "" ]]
-        then
-            copy "${file}" "${output_directory}/${file}"
-        elif ! encode "${file}" "${output}"
-        then
-            remove "${output}"
-            copy "${file}" "${output_directory}/${file}"
-        fi
+        encode_file_to_directory "${file#./}" "${output_directory}" &
+        [[ $(jobs -p | wc -l) -ge $(nproc) ]] && wait -n
     done
     cd - >/dev/null
+}
+
+encode_file_to_directory() {
+    mkdir -p "${2}/$(dirname "${1}")" || continue
+    local extension=$(get_output_extension "${1}")
+    local output="${2}/${1%.*}.${extension}"
+    if [[ ${extension} == "" ]]
+    then
+        copy "${1}" "${2}/${1}"
+    elif ! encode "${1}" "${output}"
+    then
+        remove "${output}"
+        copy "${1}" "${2}/${1}"
+    fi
 }
 
 encode_file() {
