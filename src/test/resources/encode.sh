@@ -2,10 +2,7 @@
 
 main() {
     which ffmpeg ffprobe >/dev/null || exit 1
-    for item in "${@}"
-    do
-        encode_item "${item}"
-    done
+    for item in "${@}"; do encode_item "${item}"; done
     exit 0
 }
 
@@ -58,7 +55,7 @@ encode_file_to_directory() {
 }
 
 wait_for_next() {
-    [[ $(jobs -p | wc -l) -ge $(nproc) ]] && wait -n
+    while true; do [[ $(jobs -p | wc -l) -ge $(nproc) ]] && sleep 1s || break; done
 }
 
 encode_file() {
