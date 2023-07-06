@@ -96,6 +96,10 @@ get_output_extension() {
     fi
 }
 
+find () {
+    /bin/find "${@}"
+}
+
 is_video () {
     is_type video "${1}" && is_non_static "${1}"
 }
