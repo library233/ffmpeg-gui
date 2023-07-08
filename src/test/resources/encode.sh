@@ -21,8 +21,7 @@ encode_item() {
         encode_directory "${1}" "${suffix}"
     elif [[ -f "${1}" ]]
     then
-        encode_file "${1}" "${suffix}" &
-        wait_for_next
+        encode_file "${1}" "${suffix}"
     else
         return 1
     fi
@@ -33,8 +32,7 @@ encode_directory() {
     local output_directory="../$(basename "${1}")-${2}"
     while read -d $'\0' file
     do
-        encode_file_to_directory "${file#./}" "${output_directory}" &
-        wait_for_next
+        encode_file_to_directory "${file#./}" "${output_directory}"
     done < <(find . -type f -print0)
     wait
     cd - >/dev/null
@@ -47,7 +45,7 @@ encode_file_to_directory() {
     if [[ ${extension} == "" ]]
     then
         copy "${1}" "${2}/${1}"
-    elif [[ -e "${output}" ]]
+    elif [[ -e "${output}" && ! -e "${output}.tmp" ]]
     then
         skip "${1}"
     elif ! encode "${1}" "${output}"
@@ -55,13 +53,6 @@ encode_file_to_directory() {
         remove "${output}"
         copy "${1}" "${2}/${1}"
     fi
-}
-
-wait_for_next() {
-    while [[ $(jobs -p | wc -l) -ge $(nproc) ]]
-    do
-        sleep 1s
-    done
 }
 
 encode_file() {
@@ -73,7 +64,7 @@ encode_file() {
     if [[ ${extension} == "" ]]
     then
         skip "${file}"
-    elif [[ -e "${output}" ]]
+    elif [[ -e "${output}" && ! -e "${output}.tmp" ]]
     then
         skip "${file}"
     elif ! encode "${file}" "${output}"
@@ -87,10 +78,10 @@ encode_file() {
 get_output_extension() {
     if is_video "${1}"
     then
-        echo mp4
+        echo webm
     elif is_audio "${1}"
     then
-        echo aac
+        echo webm
     else
         return 1
     fi
@@ -118,7 +109,7 @@ is_non_static() {
 
 encode() {
     printf '%s -- encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a aac -c:v libx265 -y "${2}" </dev/null >/dev/null 2>&1
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a libopus -c:v libsvtav1 -y "${2}" </dev/null >/dev/null 2>&1
 }
 
 remove() {
@@ -128,6 +119,7 @@ remove() {
 
 copy() {
     printf '%s -- copying "%s" as "%s"\n' "$(now)" "${1}" "${2}"
+    touch "${2}.tmp"
     cp -np "${1}" "${2}"
 }
 
