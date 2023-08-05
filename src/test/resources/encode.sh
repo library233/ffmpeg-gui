@@ -1,12 +1,26 @@
 #!/bin/bash
 
 main() {
-    which ffmpeg ffprobe >/dev/null || exit 1
+    setup
     for item in "${@}"
     do
         encode_item "${item}"
     done
     exit 0
+}
+
+setup() {
+    which ffmpeg ffprobe >/dev/null || exit 1
+    if [[ -z ${ffmpeg_output_video_extension} || -z ${ffmpeg_output_video_encoder} ]]
+    then
+        ffmpeg_output_video_extension=webm
+        ffmpeg_output_video_encoder=libsvtav1
+    fi
+    if [[ -z ${ffmpeg_output_audio_extension} || -z ${ffmpeg_output_audio_encoder} ]]
+    then
+        ffmpeg_output_audio_extension=opus
+        ffmpeg_output_audio_encoder=libopus
+    fi
 }
 
 encode_item() {
@@ -76,55 +90,55 @@ encode_file() {
 }
 
 get_output_extension() {
-    if is_video "${1}"
+    if has_moving_video_stream "${1}"
     then
-        echo webm
-    elif is_audio "${1}"
+        echo "${ffmpeg_output_video_extension}"
+    elif has_audio_stream "${1}"
     then
-        echo webm
+        echo "${ffmpeg_output_audio_extension}"
     else
         return 1
     fi
 }
 
-find () {
+has_moving_video_stream() {
+    has_stream video "${1}" && is_moving "${1}"
+}
+
+has_audio_stream() {
+    has_stream audio "${1}"
+}
+
+has_stream() {
+    ffprobe -loglevel error -select_streams "${1:0:1}" -show_entries stream=codec_type -of csv=p=0 "${2}" 2>/dev/null | grep -sq "${1}"
+}
+
+is_moving() {
+    [[ $(ffprobe -loglevel error -select_streams v -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${1}" 2>/dev/null | grep -Eo '[0-9]+' | head -n 1) -gt 1 ]]
+}
+
+find() {
     /bin/find "${@}"
 }
 
-is_video () {
-    is_type video "${1}" && is_non_static "${1}"
-}
-
-is_audio() {
-    is_type audio "${1}"
-}
-
-is_type() {
-    [[ "${1}" == $(ffprobe -loglevel error -select_streams "${1:0:1}" -show_entries stream=codec_type -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') ]]
-}
-
-is_non_static() {
-    [[ $(ffprobe -loglevel error -select_streams v -count_packets -show_entries stream=nb_read_packets -of csv=p=0 "${2}" 2>/dev/null | sed 's \s  g') -gt 1 ]]
-}
-
 encode() {
-    printf '%s -- encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error -i "${1}" -map_metadata -1 -c:a libopus -c:v libsvtav1 -y "${2}" </dev/null >/dev/null 2>&1
+    printf '%s [INFO] encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
 }
 
 remove() {
-    printf '%s -- removing "%s"\n' "$(now)" "${1}"
+    printf '%s [WARN] removing "%s"\n' "$(now)" "${1}"
     rm -f "${1}"
 }
 
 copy() {
-    printf '%s -- copying "%s" as "%s"\n' "$(now)" "${1}" "${2}"
+    printf '%s [INFO] copying "%s" as "%s"\n' "$(now)" "${1}" "${2}"
     touch "${2}.tmp"
     cp -np "${1}" "${2}"
 }
 
 skip() {
-    printf '%s -- skipped "%s"\n' "$(now)" "${1}"
+    printf '%s [WARN] skipped "%s"\n' "$(now)" "${1}"
 }
 
 now() {
