@@ -122,7 +122,7 @@ find() {
 }
 
 encode() {
-    printf '%s [INFO] encoding "%s" as "%s"\n' "$(now)" "${1}" "${2}"
+    printf '%s [INFO] saving as "%s"\n' "$(now)" "${2}"
     ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
 }
 
@@ -132,7 +132,7 @@ remove() {
 }
 
 copy() {
-    printf '%s [INFO] copying "%s" as "%s"\n' "$(now)" "${1}" "${2}"
+    printf '%s [WARN] copying to "%s"\n' "$(now)" "${2}"
     touch "${2}.tmp"
     cp -np "${1}" "${2}"
 }
