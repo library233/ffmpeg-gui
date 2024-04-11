@@ -21,6 +21,10 @@ setup() {
         ffmpeg_output_audio_extension=opus
         ffmpeg_output_audio_encoder=libopus
     fi
+    if [[ -z ${ffmpeg_output_suffix} ]]
+    then
+        ffmpeg_output_suffix=output
+    fi
 }
 
 encode_item() {
@@ -29,13 +33,12 @@ encode_item() {
         file "${1}"
         return 1
     fi
-    local suffix=encoded
     if [[ -d "${1}" ]]
     then
-        encode_directory "${1}" "${suffix}"
+        encode_directory "${1}"
     elif [[ -f "${1}" ]]
     then
-        encode_file "${1}" "${suffix}"
+        encode_file "${1}"
     else
         return 1
     fi
@@ -43,7 +46,7 @@ encode_item() {
 
 encode_directory() {
     cd "${1}" || return 1
-    local output_directory="../$(basename "${1}")-${2}"
+    local output_directory="../$(basename "${1}")-${ffmpeg_output_suffix}"
     while read -d $'\0' file
     do
         encode_file_to_directory "${file#./}" "${output_directory}"
@@ -74,7 +77,7 @@ encode_file() {
     local file=$(basename "${1}")
     local file=${file#./}
     local extension=$(get_output_extension "${file}")
-    local output="${file%.*}-${2}.${extension}"
+    local output="${file%.*}-${ffmpeg_output_suffix}.${extension}"
     if [[ ${extension} == "" ]]
     then
         skip "${file}"
@@ -123,7 +126,7 @@ find() {
 
 encode() {
     printf '%s [INFO] saving as "%s"\n' "$(now)" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:V? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
 }
 
 remove() {
