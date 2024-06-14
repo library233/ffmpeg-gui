@@ -126,7 +126,7 @@ find() {
 
 encode() {
     printf '%s [INFO] saving as "%s"\n' "$(now)" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:V? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
+    ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:V? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
 }
 
 remove() {
