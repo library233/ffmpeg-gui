@@ -2,10 +2,13 @@
 
 main() {
     setup
+    local log_file=${log_dir}/$(date '+%Y%m%d-%H%M%S-%N')-main.log
+    log_info "log file created at ${log_file}"
     for item in "${@}"
     do
-        encode_item "${item}"
-    done
+        process_item "${item}"
+    done | tee "${log_file}"
+    log_info "finished"
     exit 0
 }
 
@@ -25,9 +28,10 @@ setup() {
     then
         ffmpeg_output_suffix=output
     fi
+    log_dir=$(mktemp -dt ffmpeg-$(date '+%Y%m%d-%H%M%S')-XXXXXXXX)
 }
 
-encode_item() {
+process_item() {
     if [[ ! -r "${1}" ]]
     then
         file "${1}"
@@ -35,27 +39,27 @@ encode_item() {
     fi
     if [[ -d "${1}" ]]
     then
-        encode_directory "${1}"
+        process_directory "${1}"
     elif [[ -f "${1}" ]]
     then
-        encode_file "${1}"
+        process_file "${1}"
     else
         return 1
     fi
 }
 
-encode_directory() {
+process_directory() {
     cd "${1}" || return 1
     local output_directory="../$(basename "${1}")-${ffmpeg_output_suffix}"
     while read -d $'\0' file
     do
-        encode_file_to_directory "${file#./}" "${output_directory}"
+        process_file_to_directory "${file#./}" "${output_directory}"
     done < <(find . -type f -print0)
     wait
     cd - >/dev/null
 }
 
-encode_file_to_directory() {
+process_file_to_directory() {
     mkdir -p "${2}/$(dirname "${1}")" || continue
     local extension=$(get_output_extension "${1}")
     local output="${2}/${1%.*}.${extension}"
@@ -65,14 +69,14 @@ encode_file_to_directory() {
     elif [[ -e "${output}" && ! -e "${output}.tmp" ]]
     then
         skip "${1}"
-    elif ! encode "${1}" "${output}"
+    elif ! process "${1}" "${output}"
     then
         remove "${output}"
         copy "${1}" "${2}/${1}"
     fi
 }
 
-encode_file() {
+process_file() {
     cd "$(dirname "${1}")" || return 1
     local file=$(basename "${1}")
     local file=${file#./}
@@ -84,7 +88,7 @@ encode_file() {
     elif [[ -e "${output}" && ! -e "${output}.tmp" ]]
     then
         skip "${file}"
-    elif ! encode "${file}" "${output}"
+    elif ! process "${file}" "${output}"
     then
         remove "${output}"
         skip "${file}"
@@ -124,24 +128,36 @@ find() {
     /bin/find "${@}"
 }
 
-encode() {
-    printf '%s [INFO] saving as "%s"\n' "$(now)" "${2}"
-    ffmpeg -nostdin -hide_banner -nostats -loglevel error ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:V? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -y ${ffmpeg_output_options} "${2}" </dev/null >/dev/null 2>&1
+process() {
+    log_info "saving as ${2}"
+    ffmpeg -nostdin ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:v? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -y ${ffmpeg_output_options} "${2}" </dev/null >${log_dir}/$(date '+%Y%m%d-%H%M%S-%N')-process.log 2>&1
 }
 
 remove() {
-    printf '%s [WARN] removing "%s"\n' "$(now)" "${1}"
+    log_warn "removing ${1}"
     rm -f "${1}"
 }
 
 copy() {
-    printf '%s [WARN] copying to "%s"\n' "$(now)" "${2}"
+    log_warn "copying to ${2}"
     touch "${2}.tmp"
     cp -np "${1}" "${2}"
 }
 
 skip() {
-    printf '%s [WARN] skipped "%s"\n' "$(now)" "${1}"
+    log_warn "skipped ${1}"
+}
+
+log_info() {
+    log info "${@}"
+}
+
+log_warn() {
+    log warn "${@}"
+}
+
+log() {
+    printf '%s [%s] %s\n' "$(now)" "${1^^}" "${2}"
 }
 
 now() {

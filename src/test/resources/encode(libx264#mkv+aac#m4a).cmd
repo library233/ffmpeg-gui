@@ -1,0 +1,8 @@
+@echo off
+set ffmpeg_output_video_extension=mkv
+set ffmpeg_output_video_encoder=libx264
+set ffmpeg_output_audio_extension=m4a
+set ffmpeg_output_audio_encoder=aac
+set ffmpeg_output_suffix=encoded
+bash %~dp0\ffmpeg.sh %* | cat
+pause
