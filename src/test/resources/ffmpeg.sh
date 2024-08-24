@@ -2,33 +2,50 @@
 
 main() {
     setup
-    local log_file=${log_dir}/$(date '+%Y%m%d-%H%M%S-%N')-main.log
-    log_info "log file created at ${log_file}"
+    log_debug "logging to \"${log_file}\""
+    log_debug "ffmpeg_args=${ffmpeg_args}"
+    log_debug "ffmpeg_input_options=${ffmpeg_input_options}"
+    log_debug "ffmpeg_output_options=${ffmpeg_output_options}"
+    log_debug "ffmpeg_output_video_encoder=${ffmpeg_output_video_encoder}"
+    log_debug "ffmpeg_output_video_extension=${ffmpeg_output_video_extension}"
+    log_debug "ffmpeg_output_audio_encoder=${ffmpeg_output_audio_encoder}"
+    log_debug "ffmpeg_output_audio_extension=${ffmpeg_output_audio_extension}"
+    log_debug "ffmpeg_output_suffix=${ffmpeg_output_suffix}"
+    log_debug "starting"
     for item in "${@}"
     do
         process_item "${item}"
-    done | tee "${log_file}"
-    log_info "finished"
+    done
+    log_debug "finished with $(for level in debug info warn error; do printf "%s * %d + " ${level^^} $(grep -Ec "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} {1,2}\[${level^^}] " "${log_file}" 2>/dev/null); done | sed 's/ + $//g')"
     exit 0
 }
 
 setup() {
     which ffmpeg ffprobe >/dev/null || exit 1
-    if [[ -z ${ffmpeg_output_video_extension} || -z ${ffmpeg_output_video_encoder} ]]
+    log_dir=$(mktemp -dt ffmpeg-$(date '+%Y%m%d-%H%M%S')-XXXXXXXX)
+    log_file=${log_dir}/main-$(date '+%Y%m%d-%H%M%S-%N').log
+    if [[ -n ${ffmpeg_args} ]]
     then
-        ffmpeg_output_video_extension=webm
-        ffmpeg_output_video_encoder=libsvtav1
+        local args=(${ffmpeg_args//,/ })
+        ffmpeg_output_video_encoder=${args[1]}
+        ffmpeg_output_video_extension=${args[2]}
+        ffmpeg_output_audio_encoder=${args[3]}
+        ffmpeg_output_audio_extension=${args[4]}
     fi
-    if [[ -z ${ffmpeg_output_audio_extension} || -z ${ffmpeg_output_audio_encoder} ]]
+    if [[ -z ${ffmpeg_output_video_encoder} || -z ${ffmpeg_output_video_extension} ]]
     then
-        ffmpeg_output_audio_extension=opus
+        ffmpeg_output_video_encoder=libsvtav1
+        ffmpeg_output_video_extension=webm
+    fi
+    if [[ -z ${ffmpeg_output_audio_encoder} || -z ${ffmpeg_output_audio_extension} ]]
+    then
         ffmpeg_output_audio_encoder=libopus
+        ffmpeg_output_audio_extension=opus
     fi
     if [[ -z ${ffmpeg_output_suffix} ]]
     then
         ffmpeg_output_suffix=output
     fi
-    log_dir=$(mktemp -dt ffmpeg-$(date '+%Y%m%d-%H%M%S')-XXXXXXXX)
 }
 
 process_item() {
@@ -129,23 +146,27 @@ find() {
 }
 
 process() {
-    log_info "saving as ${2}"
-    ffmpeg -nostdin ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:v? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -y ${ffmpeg_output_options} "${2}" </dev/null >${log_dir}/$(date '+%Y%m%d-%H%M%S-%N')-process.log 2>&1
+    log_info "saving as \"${2}\""
+    ffmpeg -nostdin ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:v? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -c:s copy -y ${ffmpeg_output_options} "${2}" </dev/null >${log_dir}/process-$(date '+%Y%m%d-%H%M%S-%N').log 2>&1
 }
 
 remove() {
-    log_warn "removing ${1}"
+    log_warn "removing \"${1}\""
     rm -f "${1}"
 }
 
 copy() {
-    log_warn "copying to ${2}"
+    log_warn "copying to \"${2}\""
     touch "${2}.tmp"
     cp -np "${1}" "${2}"
 }
 
 skip() {
-    log_warn "skipped ${1}"
+    log_warn "skipped \"${1}\""
+}
+
+log_debug() {
+    log debug "${@}"
 }
 
 log_info() {
@@ -156,8 +177,12 @@ log_warn() {
     log warn "${@}"
 }
 
+log_error() {
+    log error "${@}"
+}
+
 log() {
-    printf '%s [%s] %s\n' "$(now)" "${1^^}" "${2}"
+    printf '%s %7s %s\n' "$(now)" "[${1^^}]" "${2}" | tee -a "${log_file}"
 }
 
 now() {
