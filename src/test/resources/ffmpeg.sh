@@ -2,7 +2,6 @@
 
 main() {
     setup
-    log_debug "logging to \"${log_file}\""
     log_debug "ffmpeg_args=${ffmpeg_args}"
     log_debug "ffmpeg_input_options=${ffmpeg_input_options}"
     log_debug "ffmpeg_output_options=${ffmpeg_output_options}"
@@ -11,12 +10,14 @@ main() {
     log_debug "ffmpeg_output_audio_encoder=${ffmpeg_output_audio_encoder}"
     log_debug "ffmpeg_output_audio_extension=${ffmpeg_output_audio_extension}"
     log_debug "ffmpeg_output_suffix=${ffmpeg_output_suffix}"
+    log_debug "log_dir=${log_dir}"
     log_debug "starting"
     for item in "${@}"
     do
         process_item "${item}"
     done
-    log_debug "finished with $(for level in debug info warn error; do printf "%s * %d + " ${level^^} $(grep -Ec "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} {1,2}\[${level^^}] " "${log_file}" 2>/dev/null); done | sed 's/ + $//g')"
+    log_debug "finished"
+    log_debug "$(for level in info warn error; do printf "%s * %d + " ${level^^} $(grep -Ec "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} {1,2}\[${level^^}] " "${log_file}" 2>/dev/null); done | sed 's/ + $//g')"
     exit 0
 }
 
@@ -89,7 +90,6 @@ process_file_to_directory() {
     elif ! process "${1}" "${output}"
     then
         remove "${output}"
-        copy "${1}" "${2}/${1}"
     fi
 }
 
@@ -108,7 +108,6 @@ process_file() {
     elif ! process "${file}" "${output}"
     then
         remove "${output}"
-        skip "${file}"
     fi
     cd - >/dev/null
 }
@@ -146,23 +145,23 @@ find() {
 }
 
 process() {
-    log_info "saving as \"${2}\""
-    ffmpeg -nostdin ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:a? -map 0:v? -map 0:s? -c:a "${ffmpeg_output_audio_encoder}" -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -c:s copy -y ${ffmpeg_output_options} "${2}" </dev/null >${log_dir}/process-$(date '+%Y%m%d-%H%M%S-%N').log 2>&1
-}
-
-remove() {
-    log_warn "removing \"${1}\""
-    rm -f "${1}"
+    log_info "saving \"${1}\" as \"${2}\""
+    ffmpeg -nostdin ${ffmpeg_input_options} -i "${1}" -map_metadata -1 -map 0:v? -map 0:a? -map 0:s? -c:v "${ffmpeg_output_video_encoder}" $(has_moving_video_stream "${1}" || echo -vn) -c:a "${ffmpeg_output_audio_encoder}" -c:s copy -y ${ffmpeg_output_options} "${2}" </dev/null >${log_dir}/process-$(date '+%Y%m%d-%H%M%S-%N')-$((${RANDOM} % 30000 + 10000)).log 2>&1
 }
 
 copy() {
-    log_warn "copying to \"${2}\""
+    log_warn "copying \"${1}\" to \"${2}\""
     touch "${2}.tmp"
     cp -np "${1}" "${2}"
 }
 
 skip() {
     log_warn "skipped \"${1}\""
+}
+
+remove() {
+    log_error "removing \"${1}\""
+    rm -f "${1}"
 }
 
 log_debug() {
